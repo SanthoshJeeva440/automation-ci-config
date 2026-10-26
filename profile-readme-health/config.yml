@@ -1,0 +1,28 @@
+# Jenkins evaluates this cron expression in the Jenkins controller's timezone.
+# H means Jenkins chooses a stable hashed minute within the specified hour.
+jenkins:
+  cron: 'H 6 * * *'
+
+profile:
+  username: 'SanthoshJeeva440'
+  page_url: 'https://github.com/SanthoshJeeva440'
+  readme_raw_url: 'https://raw.githubusercontent.com/SanthoshJeeva440/SanthoshJeeva440/main/README.md'
+
+checks:
+  page_http_timeout_seconds: 30
+  asset_timeout_seconds: 20
+  # Use 'fail' to fail Jenkins when any README image/stats card fails; 'warn' is less strict.
+  external_asset_failure_policy: 'fail'
+  required_page_text:
+    - 'Software Development Engineer in Test (SDET)'
+    - 'GitHub Stats'
+  inspect_all_readme_images: true
+  # Optional extra URLs can be listed here even if they are not currently in README.md.
+  additional_image_urls: []
+  # Detects common SVG-based error cards even when the service responds with HTTP 200.
+  error_markers:
+    - 'something went wrong'
+    - 'maximum retries exceeded'
+    - 'please add an env variable'
+    - 'api rate limit exceeded'
+    - 'could not fetch'
