@@ -26,3 +26,10 @@ checks:
     - 'please add an env variable'
     - 'api rate limit exceeded'
     - 'could not fetch'
+
+# WhatsApp settings; API credentials live in Jenkins Credentials, never in this file.
+# Use body mode for a short Sandbox test only. For daily unattended alerts, use an approved template.
+twilio:
+  notification_mode: 'template'
+  template_name: 'jenkins_failure_alert'
+  content_sid: 'HXe2c00354b45459802f68336effa5d95e'
