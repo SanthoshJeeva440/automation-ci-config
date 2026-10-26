@@ -17,9 +17,8 @@ checks:
     - 'Software Development Engineer in Test (SDET)'
     - 'GitHub Stats'
   inspect_all_readme_images: true
-  # Optional extra URLs can be listed here even if they are not currently in README.md.
   additional_image_urls: []
-  # Detects common SVG-based error cards even when the service responds with HTTP 200.
+  # Detects common SVG-based error cards even when a service responds with HTTP 200.
   error_markers:
     - 'something went wrong'
     - 'maximum retries exceeded'
@@ -27,9 +26,9 @@ checks:
     - 'api rate limit exceeded'
     - 'could not fetch'
 
-# WhatsApp settings; API credentials live in Jenkins Credentials, never in this file.
-# Use body mode for a short Sandbox test only. For daily unattended alerts, use an approved template.
-twilio:
-  notification_mode: 'template'
-  template_name: 'jenkins_failure_alert'
-  content_sid: 'HXe2c00354b45459802f68336effa5d95e'
+notifications:
+  email:
+    enabled: true
+    # Change this to your desired notification recipient.
+    to: 'santhoshjeeva440@gmail.com'
+    subject_prefix: '[GitHub README Health Check]'
