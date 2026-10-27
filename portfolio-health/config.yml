@@ -4,7 +4,7 @@ jenkins:
 
 portfolio:
   name: 'Santhosh G. Portfolio'
-  url: 'https://YOUR-PORTFOLIO-URL'
+  url: 'https://santhoshg.vercel.app'
   github_repo: 'SanthoshJeeva440/portfolio'
 
 checks:
@@ -32,5 +32,5 @@ checks:
 notifications:
   email:
     enabled: true
-    to: 'YOUR-EMAIL'
+    to: 'Santhoshjeeva440@gmail.com'
     subject_prefix: '[Portfolio Health Check]'
