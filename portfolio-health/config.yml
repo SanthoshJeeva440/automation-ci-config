@@ -1,0 +1,36 @@
+# Jenkins uses the controller timezone for this cron expression.
+jenkins:
+  cron: '0 6,18 * * *'
+
+portfolio:
+  name: 'Santhosh G. Portfolio'
+  url: 'https://YOUR-PORTFOLIO-URL'
+  github_repo: 'SanthoshJeeva440/portfolio'
+
+checks:
+  http_timeout_seconds: 30
+  browser_timeout_ms: 20000
+  browser: 'chromium'
+  headless: true
+  required_text:
+    - 'Senior QA Automation Engineer'
+    - 'Skills'
+    - 'Projects'
+    - 'Experience'
+    - 'Contact'
+  # Confirm these IDs match the IDs in your portfolio HTML.
+  required_sections:
+    - 'home'
+    - 'about'
+    - 'skills'
+    - 'projects'
+    - 'experience'
+    - 'contact'
+  check_same_origin_assets: true
+  fail_on_console_errors: true
+
+notifications:
+  email:
+    enabled: true
+    to: 'YOUR-EMAIL'
+    subject_prefix: '[Portfolio Health Check]'
