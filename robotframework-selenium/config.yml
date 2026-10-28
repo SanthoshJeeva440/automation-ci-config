@@ -1,0 +1,24 @@
+# Robot Framework Selenium CI configuration
+project:
+  name: "robotframework_selenium"
+  repository: "https://github.com/SanthoshJeeva440/robotframework_selenium.git"
+  branch: "master"
+  test_directory: "test_suite"
+  requirements_file: "resources/configuration/requirements.txt"
+  output_directory: "output"
+jenkins:
+  agents:
+    - "linux-agent-1"
+    - "mac-agent-1"
+    - "Built-In Node"
+    - "agent-git"
+parameters:
+  environments: ["dev", "qa", "prod"]
+  browsers: ["chromium", "firefox", "webkit"]
+  default_tags: "@smoke"
+  default_headless: true
+robot:
+  environment_variable: "env"
+  browser_variable: "browser"
+  mode_variable: "mode"
+  normalize_tag_prefix: true
