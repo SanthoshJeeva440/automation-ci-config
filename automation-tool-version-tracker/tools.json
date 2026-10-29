@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Selenium",
+    "slug": "selenium",
+    "category": "web",
+    "repository": "SeleniumHQ/selenium"
+  },
+  {
+    "name": "Playwright",
+    "slug": "playwright",
+    "category": "web",
+    "repository": "microsoft/playwright"
+  },
+  {
+    "name": "Cypress",
+    "slug": "cypress",
+    "category": "web",
+    "repository": "cypress-io/cypress"
+  },
+  {
+    "name": "Nightwatch.js",
+    "slug": "nightwatch",
+    "category": "web",
+    "repository": "nightwatchjs/nightwatch"
+  },
+  {
+    "name": "Puppeteer",
+    "slug": "puppeteer",
+    "category": "web",
+    "repository": "puppeteer/puppeteer"
+  },
+  {
+    "name": "WebdriverIO",
+    "slug": "webdriverio",
+    "category": "web",
+    "repository": "webdriverio/webdriverio"
+  },
+  {
+    "name": "Appium",
+    "slug": "appium",
+    "category": "mobile",
+    "repository": "appium/appium"
+  },
+  {
+    "name": "Detox",
+    "slug": "detox",
+    "category": "mobile",
+    "repository": "wix/Detox"
+  },
+  {
+    "name": "Maestro",
+    "slug": "maestro",
+    "category": "mobile",
+    "repository": "mobile-dev-inc/maestro"
+  },
+  {
+    "name": "Robot Framework",
+    "slug": "robotframework",
+    "category": "keyword",
+    "repository": "robotframework/robotframework"
+  },
+  {
+    "name": "REST Assured",
+    "slug": "rest-assured",
+    "category": "api",
+    "repository": "rest-assured/rest-assured"
+  },
+  {
+    "name": "Karate",
+    "slug": "karate",
+    "category": "api",
+    "repository": "karatelabs/karate"
+  }
+]

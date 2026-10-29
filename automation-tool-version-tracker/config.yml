@@ -1,0 +1,26 @@
+# Consumed by automation-pipelines/pipelines/automation-tool-version-tracker/Jenkinsfile
+project:
+  name: automation-tool-version-tracker
+  runner_repository: https://github.com/SanthoshJeeva440/automation-grafana.git
+  runner_branch: main
+  tools_file: tools.json
+jenkins:
+  # Friday during 08:00-08:59, using Jenkins controller timezone.
+  # Set controller timezone to Asia/Kolkata for 8 AM India time.
+  cron: 'H 8 * * 5'
+influxdb:
+  url: https://us-east-1-1.aws.cloud2.influxdata.com
+  bucket: qa_metrics
+  database: qa_metrics
+  retention_policy: autogen
+  query_language: InfluxQL
+  # Do not store the API token here. Jenkins Credentials ID: influx-cloud-token.
+notifications:
+  email:
+    enabled: true
+    to: santhoshjeeva440@gmail.com
+    send_upgrade_only: true
+    send_failure_alert: true
+release_tracking:
+  stable_releases_only: true
+  first_run_establishes_baseline: true
