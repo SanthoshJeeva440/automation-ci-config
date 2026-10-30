@@ -1,0 +1,50 @@
+# GitHub Profile & Repository Metrics collection
+# Keep secrets out of this file. Configure them as Jenkins Secret Text credentials.
+
+project:
+  name: github-profile-metrics
+  runner_repository: https://github.com/SanthoshJeeva440/automation-grafana.git
+  runner_branch: main
+  runner_path: runners/github_profile_metrics_runner.py
+
+github:
+  username: SanthoshJeeva440
+  api_base_url: https://api.github.com
+  token_credential_id: github-read-token
+
+collection:
+  repository_scope: owner
+  include_forks: true
+  include_archived: true
+  max_repositories: 500
+  per_page: 100
+  collect_profile_metrics: true
+  collect_repository_metrics: true
+  collect_commit_counts: true
+  collect_contributors: true
+  collect_pull_requests: true
+
+jenkins:
+  # The Jenkins controller timezone must be Asia/Kolkata for this to mean 07:00 IST.
+  cron: '0 7 * * *'
+  timezone: Asia/Kolkata
+  timeout_minutes: 45
+
+influxdb:
+  url: https://us-east-1-1.aws.cloud2.influxdata.com
+  bucket: qa_metrics
+  database: qa_metrics
+  retention_policy: autogen
+  token_credential_id: influx-cloud-token
+  measurement_prefix: github
+
+measurements:
+  profile: github_profile_metrics
+  account_summary: github_account_repository_summary
+  repository: github_repository_metrics
+
+notifications:
+  email:
+    enabled: true
+    to: santhoshjeeva440@gmail.com
+    send_failure_alert: true
