@@ -1,0 +1,38 @@
+# Never store API keys or webhook tokens in this file.
+project:
+  name: ai-code-review-automation
+  github_api_url: https://api.github.com
+  repositories:
+    - SanthoshJeeva440/automation-pipelines
+    - SanthoshJeeva440/automation-ci-config
+  github_token_credential_id: github-read-token
+  jenkins_linter_credential_id: jenkins-api-user-token
+  github_status_credential_id: github-pr-status-token
+
+ai_review:
+  provider: openai
+  model: gpt-4.1-mini
+  github_secret_name: OPENAI_API_KEY
+
+jenkins:
+  pr_job_token_credential_id: jenkins-pr-trigger-token
+  monthly_cron: '0 7 1 * *'
+  timezone: Asia/Kolkata
+  linter_endpoint: pipeline-model-converter/validate
+  timeout_minutes: 20
+
+report:
+  html_file: monthly-code-review-report.html
+  json_file: monthly-code-review-report.json
+  per_page: 100
+  include_pull_requests: true
+  include_default_branch_commits: true
+  include_workflow_failures: true
+  include_ai_review_findings: true
+
+notifications:
+  email:
+    enabled: true
+    to: santhoshjeeva440@gmail.com
+    subject_prefix: '[AI Code Review]'
+    monthly_subject_prefix: '[Monthly AI Code Review Report]'

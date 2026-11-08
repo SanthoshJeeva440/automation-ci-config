@@ -1,0 +1,84 @@
+name: AI Code Review
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: read
+
+concurrency:
+  group: ai-review-${{ github.repository }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  ai-review:
+    if: github.event.pull_request.draft == false
+    uses: SanthoshJeeva440/code-review/.github/workflows/review.yml@main
+    with:
+      provider: openai
+      model: gpt-4.1-mini
+      min_severity: low
+      max_comments: 25
+      fail_on: none
+      review_drafts: false
+      action_ref: main
+      extra_instructions: |
+        Review this repository as CI/CD configuration for automation pipelines.
+        Prioritize YAML syntax and structure, inconsistent configuration keys, invalid
+        repository references and paths, unsafe secret/token handling, cron/timezone
+        mistakes, incorrect values, and settings likely to break Jenkins jobs.
+        Do not report speculative issues.
+    secrets:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+  notify-jenkins:
+    name: Trigger Jenkins PR validation and email
+    if: always() && github.event_name == 'pull_request_target' && github.event.pull_request.draft == false
+    needs: [ai-review]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send PR and AI review result to Jenkins
+        env:
+          JENKINS_WEBHOOK_URL: ${{ secrets.JENKINS_GENERIC_WEBHOOK_URL }}
+          JENKINS_WEBHOOK_TOKEN: ${{ secrets.JENKINS_PR_TRIGGER_TOKEN }}
+          REVIEW_RESULT: ${{ needs.ai-review.result }}
+          REVIEW_FINDINGS: ${{ needs.ai-review.outputs.findings || '0' }}
+          REVIEW_WORST_SEVERITY: ${{ needs.ai-review.outputs.worst_severity || 'unknown' }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PR_ACTION: ${{ github.event.action }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$JENKINS_WEBHOOK_URL" || -z "$JENKINS_WEBHOOK_TOKEN" ]]; then
+            echo "Jenkins webhook secrets are not configured; Jenkins notification skipped."
+            exit 0
+          fi
+          payload="$(jq -n \
+            --arg repository "$REPOSITORY" \
+            --arg number "$PR_NUMBER" \
+            --arg title "$PR_TITLE" \
+            --arg url "$PR_URL" \
+            --arg sha "$PR_HEAD_SHA" \
+            --arg head "$PR_HEAD_REF" \
+            --arg head_repository "$HEAD_REPOSITORY" \
+            --arg base "$PR_BASE_REF" \
+            --arg action "$PR_ACTION" \
+            --arg result "$REVIEW_RESULT" \
+            --arg findings "$REVIEW_FINDINGS" \
+            --arg severity "$REVIEW_WORST_SEVERITY" \
+            '{repository:{full_name:$repository},pull_request:{number:($number|tonumber),title:$title,html_url:$url,head:{sha:$sha,ref:$head,repo:{full_name:$head_repository}},base:{ref:$base}},action:$action,review:{result:$result,findings:($findings|tonumber),worst_severity:$severity}}')"
+          curl --fail --silent --show-error --retry 2 --retry-delay 3 \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "token: ${JENKINS_WEBHOOK_TOKEN}" \
+            --data "$payload" \
+            "$JENKINS_WEBHOOK_URL"
